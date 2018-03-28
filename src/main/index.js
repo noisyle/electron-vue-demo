@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, session } from 'electron'
+import { app, BrowserWindow, session, ipcMain } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -29,9 +29,6 @@ function createWindow () {
   mainWindow.setMenu(null)
   mainWindow.loadURL(winURL)
 
-  session.fromPartition('persist:webviewsession').setProxy({proxyRules: 'http://127.0.0.1:1080'}, function () {
-  })
-
   mainWindow.on('closed', () => {
     mainWindow = null
   })
@@ -49,6 +46,13 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+ipcMain.on('webview-loaded', (event, arg) => {
+  console.log('webview-loaded')
+  session.fromPartition('persist:webviewsession').setProxy({proxyRules: 'http://127.0.0.1:1080'}, function () {
+    event.sender.send('proxy-changed')
+  })
 })
 
 /**

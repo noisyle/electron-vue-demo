@@ -20,20 +20,32 @@
 </template>
 
 <script>
+  const { ipcRenderer } = require('electron')
+
   export default {
     name: 'home',
     data () {
       return {
-        url: 'https://www.baidu.com/'
+        url: 'https://www.baidu.com/',
+        webview: undefined
       }
     },
     methods: {
       start () {
-        const webview = document.querySelector('.webview')
-        webview.loadURL(this.url)
+        this.webview.loadURL(this.url)
       }
+    },
+    mounted () {
+      this.webview = document.querySelector('.webview')
+      this.webview.addEventListener('dom-ready', () => {
+        ipcRenderer.send('webview-loaded')
+      })
     }
   }
+
+  ipcRenderer.on('proxy-changed', (event, arg) => {
+    console.log('proxy-changed')
+  })
 </script>
 
 <style>
@@ -47,6 +59,7 @@ html {
   width: 100%;
   display: flex;
   flex-flow: row nowrap;
+  border-top: 1px solid #bbb;
 }
 .wrapper .settings {
   width: 300px;
