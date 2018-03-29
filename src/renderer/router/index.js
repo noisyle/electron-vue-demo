@@ -6,13 +6,23 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'home',
-      component: require('@/components/Home').default
+      component: require('@/components/Home').default,
+      children: [
+        {
+          path: 'settings',
+          component: require('@/components/Home/Settings').default
+        },
+        {
+          path: 'proxy',
+          component: require('@/components/Home/Proxy').default
+        }
+      ]
     },
     {
       path: '*',
-      redirect: '/'
+      redirect: '/home/settings'
     }
   ]
 })

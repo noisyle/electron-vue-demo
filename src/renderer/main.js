@@ -6,6 +6,13 @@ import router from './router'
 import store from './store'
 
 import 'bulma/css/bulma.css'
+import fontawesome from '@fortawesome/fontawesome'
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import solid from '@fortawesome/fontawesome-free-solid'
+
+fontawesome.library.add(solid)
+
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios

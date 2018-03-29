@@ -1,39 +1,43 @@
 <template>
   <div class="wrapper">
     <div class="settings">
-      <div class="container">
-        <div class="field">
-          <label class="label">输入网址</label>
-          <div class="control">
-            <textarea class="textarea" placeholder="http(s)://..." v-model="url"></textarea>
-          </div>
-        </div>
-        <div class="field is-grouped">
-          <div class="control">
-            <button class="button is-link" @click="start()">开始</button>
-          </div>
-        </div>
+      <div class="tabs is-boxed">
+        <ul>
+          <li class="is-active">
+            <router-link to="/home/settings">
+              <span class="icon is-small"><font-awesome-icon icon="cog"/></span>
+              <span>设置</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/home/proxy">
+              <span class="icon is-small"><font-awesome-icon icon="globe"/></span>
+              <span>代理</span>
+            </router-link>
+          </li>
+        </ul>
       </div>
+      <router-view></router-view>
     </div>
-    <webview class="webview" src="https://www.baidu.com/" partition="persist:webviewsession"></webview>
+    <webview class="webview" :src="getUrl" partition="persist:webviewsession"></webview>
   </div>
 </template>
 
 <script>
-  const { ipcRenderer } = require('electron')
+  import { mapGetters } from 'vuex'
+  import { ipcRenderer } from 'electron'
 
   export default {
     name: 'home',
     data () {
       return {
-        url: 'https://www.baidu.com/',
         webview: undefined
       }
     },
-    methods: {
-      start () {
-        this.webview.loadURL(this.url)
-      }
+    computed: {
+      ...mapGetters([
+        'getUrl'
+      ])
     },
     mounted () {
       this.webview = document.querySelector('.webview')
